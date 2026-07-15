@@ -40,17 +40,14 @@
         .top-link-btn:hover { background: #475569; }
         #boneyard-display { color: #94a3b8; font-weight: bold; flex-grow: 1; text-align: center; }
 
-        #bots-area { display: none; justify-content: space-around; padding: 5px; background: rgba(0,0,0,0.3); width: 100%; height: 70px; flex-shrink: 0; }
-        .bot-card { background: #1e293b; padding: 5px; border-radius: 8px; text-align: center; width: 18%; max-width: 100px; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .bot-card.active { border-color: var(--accent); box-shadow: 0 0 8px var(--accent); }
-        .bot-card img { width: 25px; height: 25px; border-radius: 50%; }
-        .bot-info { font-size: 0.6rem; line-height: 1.2; }
-
+        /* TABULEIRO AGORA FICA LOGO ABAIXO DO TOP-BAR */
         #table-area { flex-grow: 1; background-color: var(--felt-color); border-top: 6px solid var(--wood-color); border-bottom: 6px solid var(--wood-color); padding: 10px; display: none; flex-direction: column; align-items: flex-start; justify-content: flex-start; overflow-y: auto; width: 100%; }
         
-        .train-section { display: grid; grid-template-columns: 120px 40px 1fr; align-items: center; margin-bottom: 8px; width: 100%; gap: 5px; }
-        .train-label { font-size: 0.7rem; color: #ccc; text-align: right; padding-right: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
-        .train-label img { width: 20px; height: 20px; border-radius: 50%; }
+        .train-section { display: grid; grid-template-columns: 130px 40px 1fr; align-items: center; margin-bottom: 8px; width: 100%; gap: 5px; }
+        .train-label { font-size: 0.8rem; color: #ccc; text-align: left; padding-right: 5px; overflow: hidden; display: flex; align-items: center; gap: 6px; }
+        .train-label img { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; }
+        .label-info-box { display: flex; flex-direction: column; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .label-info-box span:last-child { font-size: 0.65rem; color: #94a3b8; }
         .open-label { color: #ff5c5c; font-weight: bold; }
         
         .hub-col { display: flex; align-items: center; justify-content: center; }
@@ -68,7 +65,6 @@
         .domino-tile.board .half:first-child { border-right: 1px solid #7f8c8d; }
         .half { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 14px; }
 
-        /* NOVO LAYOUT DO JOGADOR: Ações em cima, Peças embaixo */
         #player-area { background: rgba(0,0,0,0.8); padding: 8px 10px; height: 140px; display: none; flex-direction: column; justify-content: flex-start; flex-shrink: 0; width: 100%; gap: 8px; }
         #actions { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%; }
         #dynamic-buttons { display: flex; flex-direction: row; gap: 8px; justify-content: center; flex-wrap: wrap; width: 100%; }
@@ -77,10 +73,8 @@
         .action-btn.secondary { background: #7f8c8d; }
         .log-msg { font-size: 0.8rem; color: var(--accent); text-align: center; height: 18px; font-weight: bold; }
         
-        /* MÃO: Ocupa largura total, alinhada à esquerda para o scroll funcionar perfeitamente */
         #player-hand { display: flex; justify-content: flex-start; width: 100%; overflow-x: auto; height: 70px; align-items: center; padding-bottom: 5px; }
 
-        /* MODAIS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
         .modal-content { background: #1e293b; padding: 30px; border-radius: 16px; max-width: 500px; width: 100%; text-align: center; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
         .modal-content h2 { color: var(--accent); margin-top: 0; }
@@ -95,15 +89,11 @@
             #top-bar { font-size: 0.7rem; padding: 3px 8px; gap: 5px; height: 35px; }
             .top-link-btn { padding: 3px 6px; font-size: 0.65rem; }
             #boneyard-display { font-size: 0.7rem; }
-            
-            #bots-area { height: 55px; }
-            .bot-card { min-width: 70px; padding: 2px; }
-            .bot-card img { width: 18px; height: 18px; }
-            .bot-info { font-size: 0.55rem; }
 
-            .train-section { grid-template-columns: 85px 30px 1fr; gap: 3px; margin-bottom: 4px; }
-            .train-label { font-size: 0.6rem; padding-right: 2px; }
-            .train-label img { width: 16px; height: 16px; }
+            .train-section { grid-template-columns: 95px 30px 1fr; gap: 3px; margin-bottom: 4px; }
+            .train-label { font-size: 0.7rem; gap: 4px; }
+            .train-label img { width: 18px; height: 18px; }
+            .label-info-box span:last-child { font-size: 0.55rem; }
             .mini-hub { width: 26px; height: 26px; font-size: 0.5rem; }
             
             .domino-tile.hand { width: 30px; height: 48px; margin: 0 2px; }
@@ -122,7 +112,6 @@
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
     <div id="login-screen" class="screen-container" style="display: flex;">
         <div class="glass-card">
             <h1 class="title">🚂 Domino Mexicano</h1>
@@ -136,7 +125,6 @@
         </div>
     </div>
 
-    <!-- TELA DO LOBBY -->
     <div id="lobby-screen" class="screen-container">
         <div class="glass-card">
             <h1 class="title" style="font-size: 1.5rem;">Sala de Espera</h1>
@@ -146,7 +134,6 @@
         </div>
     </div>
 
-    <!-- TELA DO JOGO -->
     <div id="top-bar">
         <div class="top-links">
             <button class="top-link-btn" onclick="showModal('rules-modal')">📖 Regras</button>
@@ -156,7 +143,7 @@
         <span id="round-display" style="color: var(--accent);">15|15</span>
     </div>
 
-    <div id="bots-area"></div>
+    <!-- BOTS-AREA REMOVIDO DAQUI -->
 
     <div id="table-area">
         <div class="train-section">
@@ -172,7 +159,6 @@
         </div>
     </div>
 
-    <!-- ORDEM INVERTIDA: AÇÕES EM CIMA, PEÇAS EMBAIXO -->
     <div id="player-area">
         <div id="actions">
             <div class="log-msg" id="status-log">Carregando...</div>
@@ -181,7 +167,6 @@
         <div id="player-hand"></div>
     </div>
 
-    <!-- MODAIS -->
     <div id="rules-modal" class="modal-overlay">
         <div class="modal-content">
             <h2>📖 Regras do Jogo</h2>
@@ -278,7 +263,7 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('lobby-screen').style.display = 'none';
             document.getElementById('top-bar').style.display = 'flex';
-            document.getElementById('bots-area').style.display = 'flex';
+            // REMOVIDO: document.getElementById('bots-area').style.display = 'flex';
             document.getElementById('table-area').style.display = 'flex';
             document.getElementById('player-area').style.display = 'flex';
             
@@ -292,7 +277,7 @@
             document.getElementById('mt-label').innerText = `🚂 Mex. (${data.round})`;
             document.getElementById('boneyard-display').innerText = `🪦 Cemitério: ${data.boneyardCount}`;
             
-            document.getElementById('player-label').innerHTML = `<img src="${myAvatarUrl}"> Você (${data.round})`;
+            document.getElementById('player-label').innerHTML = `<img src="${myAvatarUrl}"> <div class="label-info-box"><span>Você (${data.round})</span><span>${myHand.length}p | ${myTotalScore||0}pts</span></div>`;
             renderAll();
         });
 
@@ -423,29 +408,32 @@
             const mtDiv = document.getElementById('mt-tiles'); 
             mtDiv.innerHTML = '';
             gameData.mtTiles.forEach(t => mtDiv.appendChild(createBoardTile(t)));
-            mtDiv.scrollLeft = mtDiv.scrollWidth; 
+            mtDiv.scrollLeft = mtDiv.scrollWidth; // AUTO-SCROLL MT
             
             document.getElementById('mt-label').innerText = `🚂 Mex. (${gameData.mtEnd})`;
 
             const bc = document.getElementById('bots-trains-container'); bc.innerHTML = '';
-            const ba = document.getElementById('bots-area'); ba.innerHTML = '';
+            // REMOVIDO: const ba = document.getElementById('bots-area'); ba.innerHTML = '';
             
             gameData.players.forEach(p => {
                 if (p.id === socket.id) return;
-                let card = document.createElement('div');
-                card.className = 'bot-card' + (gameData.currentTurnId === p.id ? ' active' : '');
-                card.innerHTML = `<img src="${p.avatar}"><div class="bot-info">${p.name.split(' ')[0]} ${p.trainOpen?'🚂':''}<br><span style="color:var(--accent)">${p.handCount}p</span></div>`;
-                ba.appendChild(card);
                 
                 let div = document.createElement('div'); div.className = 'train-section';
-                let lab = document.createElement('div'); lab.className = 'train-label'; lab.innerHTML = `<img src="${p.avatar}"> ${p.name} (${p.trainEnd}) ${p.trainOpen?'🔴':''}`;
+                let lab = document.createElement('div'); lab.className = 'train-label'; 
+                lab.innerHTML = `
+                    <img src="${p.avatar}">
+                    <div class="label-info-box">
+                        <span>${p.name} (${p.trainEnd})</span>
+                        <span>${p.handCount}p | ${p.totalScore||0}pts</span>
+                    </div>
+                `;
                 if (p.trainOpen) lab.classList.add('open-label');
                 
                 let hubCol = document.createElement('div'); hubCol.className = 'hub-col'; 
                 
                 let tra = document.createElement('div'); tra.className = 'train-track' + (p.trainOpen ? ' open-train' : '');
                 p.trainTiles.forEach(t => tra.appendChild(createBoardTile(t)));
-                tra.scrollLeft = tra.scrollWidth; 
+                tra.scrollLeft = tra.scrollWidth; // AUTO-SCROLL BOTS
                 
                 div.appendChild(lab); div.appendChild(hubCol); div.appendChild(tra); bc.appendChild(div);
             });
@@ -454,9 +442,15 @@
             ptDiv.innerHTML = '';
             ptDiv.classList.toggle('open-train', myTrain.open);
             myTrain.tiles.forEach(t => ptDiv.appendChild(createBoardTile(t)));
-            ptDiv.scrollLeft = ptDiv.scrollWidth; 
+            ptDiv.scrollLeft = ptDiv.scrollWidth; // AUTO-SCROLL SEU TREM
             
-            document.getElementById('player-label').innerHTML = `<img src="${myAvatarUrl}"> Você (${myTrain.end}) ${myTrain.open ? '🔴' : ''}`;
+            document.getElementById('player-label').innerHTML = `
+                <img src="${myAvatarUrl}">
+                <div class="label-info-box">
+                    <span>Você (${myTrain.end})</span>
+                    <span>${myHand.length}p | ${myTotalScore||0}pts</span>
+                </div>
+            `;
             if (myTrain.open) document.getElementById('player-label').classList.add('open-label');
 
             updateStatus();
@@ -489,7 +483,7 @@
                 d.onclick = () => { if(isMyTurn && !mustPass) selectTile(i); };
                 h.appendChild(d);
             });
-            h.scrollLeft = h.scrollWidth; 
+            h.scrollLeft = h.scrollWidth; // AUTO-SCROLL MÃO
             renderButtons();
         }
 
