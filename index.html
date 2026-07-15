@@ -85,6 +85,34 @@
         .modal-btn:hover { background: #c0392b; }
         .rank-item { background: #334155; padding: 12px; margin: 8px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
         .rank-item.winner { border: 2px solid var(--accent); background: #422006; }
+
+        /* AJUSTE PARA CELULAR (MOBILE) */
+        @media (max-width: 600px) {
+            #top-bar { font-size: 0.7rem; padding: 5px 8px; gap: 5px; }
+            .top-link-btn { padding: 4px 8px; font-size: 0.65rem; }
+            #boneyard-display { font-size: 0.7rem; }
+            
+            #bots-area { height: 60px; }
+            .bot-card { min-width: 70px; padding: 3px; }
+            .bot-card img { width: 20px; height: 20px; }
+            .bot-info { font-size: 0.55rem; }
+
+            .train-section { grid-template-columns: 85px 30px 1fr; gap: 3px; }
+            .train-label { font-size: 0.6rem; padding-right: 2px; }
+            .train-label img { width: 16px; height: 16px; }
+            .mini-hub { width: 28px; height: 28px; font-size: 0.5rem; }
+            
+            .domino-tile.hand { width: 30px; height: 50px; margin: 0 2px; }
+            .half { font-size: 12px; line-height: 12px; }
+            .domino-tile.board { width: 35px; height: 18px; }
+            
+            #player-area { height: 90px; padding: 5px; }
+            #actions { width: 130px; }
+            .action-btn { padding: 8px; font-size: 0.65rem; }
+            .log-msg { font-size: 0.65rem; }
+            
+            .modal-content { padding: 20px; width: 95%; }
+        }
     </style>
 </head>
 <body>
