@@ -169,6 +169,29 @@ io.on('connection', (socket) => {
             gameState.consecutivePasses = 0;
             io.to(socket.id).emit('yourHand', player.hand);
 
+            if (player.hand.length === 0) {
+                // Atualiza o tabuleiro uma última vez antes de acabar
+                io.emit('boardUpdate', {
+                    mtEnd: gameState.mexicanTrainEnd,
+                    mtTiles: gameState.mexicanTrainTiles,
+                    players: players.map(p => ({ id: p.id, name: p.name, avatar: p.avatar, totalScore: p.totalScore, trainEnd: p.trainEnd, trainTiles: p.trainTiles, trainOpen: p.trainOpen, handCount: p.hand.length })),
+                    pendingDouble: gameState.pendingDouble,
+                    currentTurnId: players[gameState.currentTurnIndex].id,
+                    boneyardCount: gameState.boneyard.length
+                });
+                handleRoundEnd(player.name);
+                return;
+            }
+
+            // CORREÇÃO: Atualiza o índice da vez ANTES de enviar o boardUpdate
+            if (playedDouble && !satisfiedDouble) {
+                players[playerIndex].hasDrawn = false;
+                // A vez não muda
+            } else {
+                gameState.currentTurnIndex = (playerIndex + 1) % players.length;
+                players[gameState.currentTurnIndex].hasDrawn = false;
+            }
+
             io.emit('boardUpdate', {
                 mtEnd: gameState.mexicanTrainEnd,
                 mtTiles: gameState.mexicanTrainTiles,
@@ -178,19 +201,7 @@ io.on('connection', (socket) => {
                 boneyardCount: gameState.boneyard.length
             });
 
-            if (player.hand.length === 0) {
-                handleRoundEnd(player.name);
-                return;
-            }
-
-            if (playedDouble && !satisfiedDouble) {
-                players[playerIndex].hasDrawn = false;
-                io.emit('turnUpdate', players[gameState.currentTurnIndex].id);
-            } else {
-                gameState.currentTurnIndex = (playerIndex + 1) % players.length;
-                players[gameState.currentTurnIndex].hasDrawn = false;
-                io.emit('turnUpdate', players[gameState.currentTurnIndex].id);
-            }
+            io.emit('turnUpdate', players[gameState.currentTurnIndex].id);
         } else {
             io.to(socket.id).emit('invalidMove', 'Jogada inválida. Sincronizando o tabuleiro...');
             io.to(socket.id).emit('yourHand', player.hand);
@@ -225,6 +236,10 @@ io.on('connection', (socket) => {
             io.to(socket.id).emit('yourHand', players[playerIndex].hand);
             io.to(socket.id).emit('drawResult', playable);
             io.emit('boneyardUpdate', gameState.boneyard.length);
+        } else {
+            // CORREÇÃO: Cemitério vazio! Obriga a passar a vez.
+            players[playerIndex].hasDrawn = true;
+            io.to(socket.id).emit('drawResult', false);
         }
     });
 
@@ -237,6 +252,23 @@ io.on('connection', (socket) => {
 
         io.to(socket.id).emit('yourTrain', { end: players[playerIndex].trainEnd, tiles: players[playerIndex].trainTiles, open: true });
         
+        if (gameState.consecutivePasses >= players.length && gameState.boneyard.length === 0) {
+            io.emit('boardUpdate', {
+                mtEnd: gameState.mexicanTrainEnd,
+                mtTiles: gameState.mexicanTrainTiles,
+                players: players.map(p => ({ id: p.id, name: p.name, avatar: p.avatar, totalScore: p.totalScore, trainEnd: p.trainEnd, trainTiles: p.trainTiles, trainOpen: p.trainOpen, handCount: p.hand.length })),
+                pendingDouble: gameState.pendingDouble,
+                currentTurnId: players[playerIndex].id,
+                boneyardCount: gameState.boneyard.length
+            });
+            handleRoundEnd("Ninguém (Cemitério vazio)");
+            return;
+        }
+
+        // CORREÇÃO: Atualiza o índice da vez ANTES de enviar o boardUpdate
+        gameState.currentTurnIndex = (playerIndex + 1) % players.length;
+        players[gameState.currentTurnIndex].hasDrawn = false;
+
         io.emit('boardUpdate', {
             mtEnd: gameState.mexicanTrainEnd,
             mtTiles: gameState.mexicanTrainTiles,
@@ -246,13 +278,6 @@ io.on('connection', (socket) => {
             boneyardCount: gameState.boneyard.length
         });
 
-        if (gameState.consecutivePasses >= players.length && gameState.boneyard.length === 0) {
-            handleRoundEnd("Ninguém (Cemitério vazio)");
-            return;
-        }
-
-        gameState.currentTurnIndex = (playerIndex + 1) % players.length;
-        players[gameState.currentTurnIndex].hasDrawn = false;
         io.emit('turnUpdate', players[gameState.currentTurnIndex].id);
     });
 
